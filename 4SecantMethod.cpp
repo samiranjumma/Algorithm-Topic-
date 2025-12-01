@@ -1,43 +1,44 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class NewtonRaphson{
+class SecantMethod{
 private:
-    double a;
+    double x1;
+    double x2;
     double tolerance;
 public:
-    NewtonRaphson(double fi, double tol) : a(fi),tolerance(tol){}
+    SecantMethod(double fi, double se, double tol) 
+                        : x1(fi), x2(se), tolerance(tol){}
 
     double calculateValue(double x) {
         return pow(x, 2) - 2 * x - 4;
     }
-    double DifferentionValue(double x) {
-        return 2 * x - 2;
-    }
 
-    int i = 1;
+    int i = 3;
     void Iteration() {
-        double x = a - (calculateValue(x) / DifferentionValue(x));
-        while(fabs(a-x) > tolerance) {
-            a = x;
-            x = a - (calculateValue(x) / DifferentionValue(x));
-            printf("The New Value of x%d = %.6f\n", i, x);
+        double newX = x1-(calculateValue(x1)*(x1-x2)/(calculateValue(x1)-calculateValue(x2)));
+        while(fabs(x1 - x2) > tolerance) {
+            x1 = x2;
+            x2 = newX;
+            newX = x1-(calculateValue(x1)*(x1-x2)/(calculateValue(x1)-calculateValue(x2)));
+            printf("The New Value of x%d = %.6f\n", i, newX);
             i++;
         }
 
-        printf("The Final Root is = %f\n" ,x);
+        printf("The Final Root is = %f\n" ,newX);
     }
 };
 
 int main() {
     srand((unsigned) time(NULL));
 
-    double a = rand()%10 - 5;
+    double x1 = rand()%10 - 5;
+    double x2 = x1 + rand()%10 + 3;
     double tolerance = 0.0001;
 
-    cout << "a = " << a << '\n';
+    cout << "x1 = " << x1 << " x2 = " << x2 << '\n';
 
-    NewtonRaphson nwtr = NewtonRaphson(a, tolerance);
+    SecantMethod nwtr = SecantMethod(x1, x2, tolerance);
 
     nwtr.Iteration();
 }
